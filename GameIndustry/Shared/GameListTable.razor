@@ -1,0 +1,40 @@
+﻿
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead class="thead-light">
+            <tr>
+                <th>Name</th>
+                <th>Genre</th>
+                <th>Release date</th>
+                <th> <input type="checkbox" @onchange="(() => ButtonsIsDisplayed =!ButtonsIsDisplayed)" />Delete</th><!--() - анонимная функция-->
+            </tr>
+        </thead>
+        <tbody>
+            @if (Games == null)
+            {
+                <tr>LOADING DATA </tr>
+            }
+            else if (Games.Count == 0)
+            {
+                <tr>NO ITEMS IN ARRAY </tr>
+            }
+            else
+            {
+                @foreach (var item in Games)
+                {
+                    @*<td>@item.Name</td>
+                        <td>@item.Genre</td>
+                        <td>@item.ReleaseDate.ToString("dd.MM.yyyy")</td>*@
+                    <IndividualGame Game="item" IsTable="true" ButtonsIsDisplayed="ButtonsIsDisplayed"/>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+@code
+{
+    [Parameter] public List<Game> Games { get; set; }
+    bool ButtonsIsDisplayed = false;
+ 
+}

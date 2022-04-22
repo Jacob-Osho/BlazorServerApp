@@ -1,0 +1,61 @@
+﻿@if (!IsTable)
+{
+    <div class="row text-center alert alert-info">
+        <!--голубой фон-->
+    <div class="col">
+            <p>@Game.Name</p>
+            <p>@Game.Genre</p>
+            <p>@Game.ReleaseDate.ToString("dd.MM.yyyy")</p>
+        </div>
+    </div>
+
+    @if (ButtonsIsDisplayed)
+    {
+        <div class="row">
+            <div class="col offset-3">
+                <!--otstup na 3 kolonki-->
+        <button class="btn btn-danger" @onclick="Delete">Delete</button>
+            </div>
+            <div class="col">
+                @if (msg != null)
+                {
+                    <span class="text-danger"> @msg</span>
+                    msg = null;
+                }
+            </div>
+        </div>
+    }
+}
+else
+{
+    <tr>
+        <td>@Game.Name</td>
+        <td>@Game.Genre</td>
+        <td>@Game.ReleaseDate.ToString("dd.MM.yyyy")</td>
+        <td>
+            @if (ButtonsIsDisplayed)
+            {
+                <button class="btn btn-danger" @onclick="Delete">Delete</button>
+                @if (msg != null)
+                {
+                    <span class="text-danger pl-3">@msg </span>
+                    msg = null;
+                }
+            }
+        </td>
+
+    </tr>
+}
+
+
+@code {
+    [Parameter] public Game Game { get; set; }
+    [Parameter] public bool IsTable { get; set; }
+    [Parameter] public bool ButtonsIsDisplayed { get; set; } = false;
+    string msg;
+    void Delete()
+    {
+        //Delete logic
+        msg = $"{Game.Name} - Deleted!";
+    }
+}
