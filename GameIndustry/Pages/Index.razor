@@ -1,7 +1,7 @@
 ﻿@page "/"
 
 
-<div class ="row">
+<div class="row">
     <div class="col text-center">
         <h1>
             Welcome to our game industry page
@@ -9,7 +9,7 @@
     </div>
 </div>
 
-<div class ="row">
+<div class="row">
     <div class="col text-center">
         <h2>
             Show all games in MOCK DB:
@@ -18,12 +18,21 @@
 </div>
 
 
-<GameListTable Games="games"/>
-<IndividualGame Game ="games[0]" IsTable="false" ButtonsIsDisplayed ="true"/>
+<GameListTable Games="games" />
+@if (games != null)
+{
 
-@code{
+    <IndividualGame Game="oneGameToShow" IsTable="false" ButtonsIsDisplayed="ShowButton()" SwitchGame="ShowGame" />
+
+
+}
+
+@code {
+    Game oneGameToShow;
     List<Game> games;
-    protected  override void OnInitialized()//отвечает за заполнение данных до отрисовки
+    Random rnd;
+    bool buttonIsShown = true;
+    protected override void OnInitialized()//отвечает за заполнение данных до отрисовки
     {
         games = new List<Game>
         {
@@ -32,22 +41,70 @@
                 Name = "Farming Simulator",
                 Genre = "Simulator",
                 ReleaseDate = new DateTime(2018,11,19)
-                
+
             },
              new Game()
             {
                 Name = "The Witcher 3",
                 Genre = "Action/RPG",
                 ReleaseDate = new DateTime(2015,05,18)
-                
+
             },
              new Game()
             {
                 Name = "Destroy all Humans",
                 Genre = "Actio-advanture",
                 ReleaseDate = new DateTime(2020,07,28)
-                
+
             },
         };
+        rnd = new Random(DateTime.Now.Millisecond);
+        oneGameToShow = games[rnd.Next(0, games.Count)];
+      
+
     }
+
+
+    protected bool  ShowButton()
+    {
+        if (games.Count >= 2)
+        {
+            return true;
+        }
+        else
+        {
+             return false;
+        }
+       
+    }
+
+    void ShowGame()
+    {
+        var temp = SwitchGame();
+        while(temp==oneGameToShow)
+        {
+            temp = SwitchGame();
+        }
+        oneGameToShow = temp;
+    }
+
+    Game SwitchGame()
+    {
+        Game temp;
+        if (games.Count >= 2)
+        {
+            int iterator = rnd.Next(0, games.Count);
+            temp = games[iterator];
+        }
+        else if (games.Count == 1)
+        {
+            temp = games[0];
+        }
+        else
+        {
+            return new Game() { Name = "np iteams in array", Genre = "****", ReleaseDate = DateTime.Now };
+        }
+        return temp;
+    }
+
 }

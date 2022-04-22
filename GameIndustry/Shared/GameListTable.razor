@@ -6,7 +6,8 @@
                 <th>Name</th>
                 <th>Genre</th>
                 <th>Release date</th>
-                <th> <input type="checkbox" @onchange="(() => ButtonsIsDisplayed =!ButtonsIsDisplayed)" />Delete</th><!--() - анонимная функция-->
+                <th> <input type="checkbox" @bind="ButtonsIsDisplayed" />Delete</th>
+
             </tr>
         </thead>
         <tbody>
@@ -25,10 +26,11 @@
                     @*<td>@item.Name</td>
                         <td>@item.Genre</td>
                         <td>@item.ReleaseDate.ToString("dd.MM.yyyy")</td>*@
-                    <IndividualGame Game="item" IsTable="true" ButtonsIsDisplayed="ButtonsIsDisplayed"/>
+                    <IndividualGame Game="item" IsTable="true" ButtonsIsDisplayed="ButtonsIsDisplayed" DeleteGame="DeleteIteam" />
                 }
             }
         </tbody>
+
     </table>
 </div>
 
@@ -36,5 +38,10 @@
 {
     [Parameter] public List<Game> Games { get; set; }
     bool ButtonsIsDisplayed = false;
- 
+
+    void DeleteIteam(Game game)
+    {
+        Games.Remove(game);
+    }
+    
 }
