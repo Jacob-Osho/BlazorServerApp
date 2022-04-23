@@ -6,20 +6,20 @@
             <p>@Game.Name</p>
             <p>@Game.Genre</p>
             <p>@Game.ReleaseDate.ToString("dd.MM.yyyy")</p>
-        </div>
-    </div>
+     
 
     @if (ButtonsIsDisplayed)
     {
         <div class="row">
-            <div class="col offset-3">
-                <!--otstup na 3 kolonki-->
-                <button class="btn btn-info" @onclick="SwitchGame">Switch</button>
+            <div class="col ">
+               
+                <button class="btn btn-primary" @onclick="SwitchGame">Switch</button>
             </div>
-            <div class="col">
-            </div>
+           
         </div>
     }
+       </div>
+    </div>
 }
 else
 {

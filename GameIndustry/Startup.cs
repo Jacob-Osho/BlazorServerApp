@@ -1,4 +1,5 @@
 
+using GameIndustry.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
@@ -28,6 +29,10 @@ namespace GameIndustry
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
+           
+            services.AddSingleton<SingletoneServices>();
+            services.AddTransient<TransientServices>();
+            services.AddTransient<IRepository,MockGamesRepositories>();
            
         }
 

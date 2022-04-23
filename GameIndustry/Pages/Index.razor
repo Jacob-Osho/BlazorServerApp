@@ -1,4 +1,5 @@
 ﻿@page "/"
+@inject IRepository repository
 
 
 <div class="row">
@@ -19,10 +20,12 @@
 
 
 <GameListTable Games="games" />
+  
+
 @if (games != null)
 {
 
-    <IndividualGame Game="oneGameToShow" IsTable="false" ButtonsIsDisplayed="ShowButton()" SwitchGame="ShowGame" />
+    <IndividualGame Game="oneGameToShow" IsTable="false" ButtonsIsDisplayed="buttonIsShown" SwitchGame="ShowGame" />
 
 
 }
@@ -32,32 +35,12 @@
     List<Game> games;
     Random rnd;
     bool buttonIsShown = true;
-    protected override void OnInitialized()//отвечает за заполнение данных до отрисовки
+    
+    protected    override void OnInitialized()//отвечает за заполнение данных до отрисовки
     {
-        games = new List<Game>
-        {
-            new Game()
-            {
-                Name = "Farming Simulator",
-                Genre = "Simulator",
-                ReleaseDate = new DateTime(2018,11,19)
 
-            },
-             new Game()
-            {
-                Name = "The Witcher 3",
-                Genre = "Action/RPG",
-                ReleaseDate = new DateTime(2015,05,18)
+        games =repository.GetAllGames();
 
-            },
-             new Game()
-            {
-                Name = "Destroy all Humans",
-                Genre = "Actio-advanture",
-                ReleaseDate = new DateTime(2020,07,28)
-
-            },
-        };
         rnd = new Random(DateTime.Now.Millisecond);
         oneGameToShow = games[rnd.Next(0, games.Count)];
       
@@ -102,7 +85,7 @@
         }
         else
         {
-            return new Game() { Name = "np iteams in array", Genre = "****", ReleaseDate = DateTime.Now };
+            return new Game() { Name = "no iteams in array", Genre = "****", ReleaseDate = DateTime.Now };
         }
         return temp;
     }
