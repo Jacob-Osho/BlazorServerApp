@@ -13,21 +13,18 @@
 <div class="row">
     <div class="col text-center">
         <h2>
-            Show all games in MOCK DB:
+            All games in MOCK DB:
         </h2>
     </div>
 </div>
 
 
-<GameListTable Games="games" />
+<GameListTable Games="games" @ref="popUp"/>
   
 
 @if (games != null)
 {
-
     <IndividualGame Game="oneGameToShow" IsTable="false" ButtonsIsDisplayed="buttonIsShown" SwitchGame="ShowGame" />
-
-
 }
 
 @code {
@@ -35,18 +32,16 @@
     List<Game> games;
     Random rnd;
     bool buttonIsShown = true;
-    
+    //link
+    GameListTable popUp;
+   
+
     protected    override void OnInitialized()//отвечает за заполнение данных до отрисовки
     {
-
         games =repository.GetAllGames();
-
         rnd = new Random(DateTime.Now.Millisecond);
         oneGameToShow = games[rnd.Next(0, games.Count)];
-      
-
     }
-
 
     protected bool  ShowButton()
     {
@@ -56,12 +51,12 @@
         }
         else
         {
-             return false;
+            return false;
         }
-       
+
     }
 
-    void ShowGame()
+    public void ShowGame()
     {
         var temp = SwitchGame();
         while(temp==oneGameToShow)
@@ -78,16 +73,21 @@
         {
             int iterator = rnd.Next(0, games.Count);
             temp = games[iterator];
+          
         }
         else if (games.Count == 1)
         {
             temp = games[0];
+             
         }
         else
         {
+           
             return new Game() { Name = "no iteams in array", Genre = "****", ReleaseDate = DateTime.Now };
+
         }
         return temp;
+       
     }
 
 }

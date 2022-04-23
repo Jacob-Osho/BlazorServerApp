@@ -6,16 +6,22 @@
                 <th>Name</th>
                 <th>Genre</th>
                 <th>Release date</th>
-                <th> <input type="checkbox" @bind="ButtonsIsDisplayed" />Delete</th>
+                <th> <input type="checkbox" @bind="buttonsIsDisplayed" />Delete</th>
 
             </tr>
         </thead>
         <tbody>
-           <GenericList ListOfIteams="Games">
-               <IteamTemplate Context="game">
-                    <IndividualGame Game ="game" IsTable ="true" ButtonsIsDisplayed ="ButtonsIsDisplayed" DeleteGame="DeleteIteam"/>
-               </IteamTemplate>
-           </GenericList>
+            <GenericList ListOfIteams="Games">
+                <IteamTemplate Context="game">
+                    <IndividualGame Game="game" IsTable="true" ButtonsIsDisplayed="buttonsIsDisplayed" DeleteGame="DeleteIteam" />
+                </IteamTemplate>
+            </GenericList>
+
+            <Confirmation @ref="confirmation" OnCancel="OnCancel" OnConfirm="OnCOnfirm">
+                <div class="text-danger">
+                    Are you sure want to delete @gameTobeDeleted.Name ?"
+                </div>
+            </Confirmation>
         </tbody>
     </table>
 </div>
@@ -29,21 +35,38 @@
 {
     [Parameter] public List<Game> Games { get; set; }
 
-    bool ButtonsIsDisplayed = false;
+    bool buttonsIsDisplayed = false;
+    Confirmation confirmation;
+    Game gameTobeDeleted;
 
     void DeleteIteam(Game game)
     {
-        Games.Remove(game);
+        gameTobeDeleted = game;
+        confirmation.ShowPanel();
     }
     void AddIteam()
     {
         Games.Add(new Game()
-        {
-            Name = "Test Game",
-            Genre = "Test Genre",
-            ReleaseDate = DateTime.Now
-        });
+            {
+                Name = "Test Game",
+                Genre = "Test Genre",
+                ReleaseDate = DateTime.Now
+            });
     }
+    void OnCOnfirm()
+    {
+        Games.Remove(gameTobeDeleted);
+        confirmation.HidePanel();
+        gameTobeDeleted = null;
+
+    }
+    void OnCancel()
+    {
+       
+        confirmation.HidePanel();
+        gameTobeDeleted = null;
+    }
+
     /*------------------*/
     //protected override void OnInitialized()
     //{
