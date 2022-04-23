@@ -1,6 +1,18 @@
-﻿
+﻿<div class="row mb-3">
+    <div class="col">
+        <select class="btn btn-toolbar border dropdown-toggle" @onchange="ChangeTableStyle">
+            <option selected value="">Switch Style</option>
+            @foreach (var item in AppStyle.TableStyle)
+            {
+                <option value="@item.Value">@item.Text</option>
+            }
+        </select>
+    </div>
+</div>
+
+
 <div class="table-responsive">
-    <table class="table table-striped">
+    <table class="table @currentTableStyle">
         <thead class="thead-light">
             <tr>
                 <th>Name</th>
@@ -34,10 +46,11 @@
 @code
 {
     [Parameter] public List<Game> Games { get; set; }
-
+    [CascadingParameter(Name = "Style")] public AppStyles AppStyle { get; set; }
     bool buttonsIsDisplayed = false;
     Confirmation confirmation;
     Game gameTobeDeleted;
+    string currentTableStyle;
 
     void DeleteIteam(Game game)
     {
@@ -62,28 +75,12 @@
     }
     void OnCancel()
     {
-       
+
         confirmation.HidePanel();
         gameTobeDeleted = null;
     }
-
-    /*------------------*/
-    //protected override void OnInitialized()
-    //{
-    //    Console.WriteLine($"1. OnInitialized().{Games.Count}.");
-    //}
-
-    //protected override void OnParametersSet()
-    //{
-    //    Console.WriteLine($"2. OnParametersSet().{Games.Count}.");
-    //}
-    //protected override void OnAfterRender(bool firstRender)
-    //{
-    //    Console.WriteLine($"3. OnParametersSet(). IsRendered1stTime : {firstRender}.");
-    //}
-    //protected override bool ShouldRender()
-    //{
-    //    return true;
-    //}
-    /*------------------*/
+    void ChangeTableStyle(ChangeEventArgs currentItem)
+    {
+        currentTableStyle = currentItem.Value.ToString();
+    }
 }

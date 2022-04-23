@@ -19,12 +19,22 @@
 </div>
 
 
-<GameListTable Games="games" @ref="popUp"/>
-  
+<GameListTable Games="games" @ref="popUp" />
+
 
 @if (games != null)
 {
     <IndividualGame Game="oneGameToShow" IsTable="false" ButtonsIsDisplayed="buttonIsShown" SwitchGame="ShowGame" />
+    if (oneGameToShow.Name == "The Witcher 3" && Style.WitcherWords != null)
+    {
+        ShowWitchersWord();
+        <div class="row mt-3">
+            <div class="col alert alert-dark text-center" style="color:@Style.Color">
+                @witchersWord
+            </div>
+        </div>
+    }
+
 }
 
 @code {
@@ -34,16 +44,18 @@
     bool buttonIsShown = true;
     //link
     GameListTable popUp;
-   
+    [CascadingParameter(Name = "Style")] public AppStyles Style { get; set; }
+    string witchersWord;
 
-    protected    override void OnInitialized()//отвечает за заполнение данных до отрисовки
+
+    protected override void OnInitialized()//отвечает за заполнение данных до отрисовки
     {
-        games =repository.GetAllGames();
+        games = repository.GetAllGames();
         rnd = new Random(DateTime.Now.Millisecond);
         oneGameToShow = games[rnd.Next(0, games.Count)];
     }
 
-    protected bool  ShowButton()
+    protected bool ShowButton()
     {
         if (games.Count >= 2)
         {
@@ -55,11 +67,19 @@
         }
 
     }
-
+    void ShowWitchersWord()
+    {
+        string temp = Style.WitcherWords[rnd.Next(0, Style.WitcherWords.Count)];
+        while (temp == witchersWord)
+        {
+            temp = Style.WitcherWords[rnd.Next(0, Style.WitcherWords.Count)];
+        }
+        witchersWord = temp;
+    }
     public void ShowGame()
     {
         var temp = SwitchGame();
-        while(temp==oneGameToShow)
+        while (temp == oneGameToShow)
         {
             temp = SwitchGame();
         }
@@ -73,21 +93,21 @@
         {
             int iterator = rnd.Next(0, games.Count);
             temp = games[iterator];
-          
+
         }
         else if (games.Count == 1)
         {
             temp = games[0];
-             
+
         }
         else
         {
-           
+
             return new Game() { Name = "no iteams in array", Genre = "****", ReleaseDate = DateTime.Now };
 
         }
         return temp;
-       
+
     }
 
 }
