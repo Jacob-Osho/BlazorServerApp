@@ -1,0 +1,113 @@
+﻿@page "/"
+@inject IRepository repository
+
+
+<div class="row">
+    <div class="col text-center">
+        <h1>
+            Welcome to our game industry page
+        </h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col text-center">
+        <h2>
+            All games in MOCK DB:
+        </h2>
+    </div>
+</div>
+
+
+<GameListTable Games="games" @ref="popUp" />
+
+
+@if (games != null)
+{
+    <IndividualGame Game="oneGameToShow" IsTable="false" ButtonsIsDisplayed="buttonIsShown" SwitchGame="ShowGame" />
+    if (oneGameToShow.Name == "The Witcher 3" && Style.WitcherWords != null)
+    {
+        ShowWitchersWord();
+        <div class="row mt-3">
+            <div class="col alert alert-dark text-center" style="color:@Style.Color">
+                @witchersWord
+            </div>
+        </div>
+    }
+
+}
+
+@code {
+    Game oneGameToShow;
+    List<Game> games;
+    Random rnd;
+    bool buttonIsShown = true;
+    //link
+    GameListTable popUp;
+    [CascadingParameter(Name = "Style")] public AppStyles Style { get; set; }
+    string witchersWord;
+
+
+    protected override void OnInitialized()//отвечает за заполнение данных до отрисовки
+    {
+        games = repository.GetAllGames();
+        rnd = new Random(DateTime.Now.Millisecond);
+        oneGameToShow = games[rnd.Next(0, games.Count)];
+    }
+
+    protected bool ShowButton()
+    {
+        if (games.Count >= 2)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
+    }
+    void ShowWitchersWord()
+    {
+        string temp = Style.WitcherWords[rnd.Next(0, Style.WitcherWords.Count)];
+        while (temp == witchersWord)
+        {
+            temp = Style.WitcherWords[rnd.Next(0, Style.WitcherWords.Count)];
+        }
+        witchersWord = temp;
+    }
+    public void ShowGame()
+    {
+        var temp = SwitchGame();
+        while (temp == oneGameToShow)
+        {
+            temp = SwitchGame();
+        }
+        oneGameToShow = temp;
+    }
+
+    Game SwitchGame()
+    {
+        Game temp;
+        if (games.Count >= 2)
+        {
+            int iterator = rnd.Next(0, games.Count);
+            temp = games[iterator];
+
+        }
+        else if (games.Count == 1)
+        {
+            temp = games[0];
+
+        }
+        else
+        {
+
+            return new Game() { Name = "no iteams in array", Genre = "****", ReleaseDate = DateTime.Now };
+
+        }
+        return temp;
+
+    }
+
+}

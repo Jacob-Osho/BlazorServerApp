@@ -1,0 +1,86 @@
+﻿<div class="row mb-3">
+    <div class="col">
+        <select class="btn btn-toolbar border dropdown-toggle" @onchange="ChangeTableStyle">
+            <option selected value="">Switch Style</option>
+            @foreach (var item in AppStyle.TableStyle)
+            {
+                <option value="@item.Value">@item.Text</option>
+            }
+        </select>
+    </div>
+</div>
+
+
+<div class="table-responsive">
+    <table class="table @currentTableStyle">
+        <thead class="thead-light">
+            <tr>
+                <th>Name</th>
+                <th>Genre</th>
+                <th>Release date</th>
+                <th> <input type="checkbox" @bind="buttonsIsDisplayed" />Delete</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            <GenericList ListOfIteams="Games">
+                <IteamTemplate Context="game">
+                    <IndividualGame Game="game" IsTable="true" ButtonsIsDisplayed="buttonsIsDisplayed" DeleteGame="DeleteIteam" />
+                </IteamTemplate>
+            </GenericList>
+
+            <Confirmation @ref="confirmation" OnCancel="OnCancel" OnConfirm="OnCOnfirm">
+                <div class="text-danger">
+                    Are you sure want to delete @gameTobeDeleted.Name ?"
+                </div>
+            </Confirmation>
+        </tbody>
+    </table>
+</div>
+<div class="row">
+    <div class="col text-center">
+        <button @onclick="AddIteam" class="btn btn-success" style="margin-bottom:10px">Add Game</button>
+    </div>
+
+</div>
+@code
+{
+    [Parameter] public List<Game> Games { get; set; }
+    [CascadingParameter(Name = "Style")] public AppStyles AppStyle { get; set; }
+    bool buttonsIsDisplayed = false;
+    Confirmation confirmation;
+    Game gameTobeDeleted;
+    string currentTableStyle;
+
+    void DeleteIteam(Game game)
+    {
+        gameTobeDeleted = game;
+        confirmation.ShowPanel();
+    }
+    void AddIteam()
+    {
+        Games.Add(new Game()
+            {
+                Name = "Test Game",
+                Genre = "Test Genre",
+                ReleaseDate = DateTime.Now
+            });
+    }
+    void OnCOnfirm()
+    {
+        Games.Remove(gameTobeDeleted);
+        confirmation.HidePanel();
+        gameTobeDeleted = null;
+
+    }
+    void OnCancel()
+    {
+
+        confirmation.HidePanel();
+        gameTobeDeleted = null;
+    }
+    void ChangeTableStyle(ChangeEventArgs currentItem)
+    {
+        currentTableStyle = currentItem.Value.ToString();
+    }
+}
