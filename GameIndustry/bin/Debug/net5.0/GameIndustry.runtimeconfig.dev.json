@@ -1,9 +1,0 @@
-{
-  "runtimeOptions": {
-    "additionalProbingPaths": [
-      "C:\\Users\\akell\\.dotnet\\store\\|arch|\\|tfm|",
-      "C:\\Users\\akell\\.nuget\\packages",
-      "D:\\VS COMMON\\NuGetPackages"
-    ]
-  }
-}
